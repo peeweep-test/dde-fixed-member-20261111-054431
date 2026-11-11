@@ -135,7 +135,7 @@ jobs:
 
           def identity(pr):
               source = pr["head"]["repo"] or {}
-              return {"number": pr["number"], "head": pr["head"]["sha"],
+              return {"number": pr["number"], "head_sha": pr["head"]["sha"],
                       "head_repo": source.get("full_name"), "head_ref": pr["head"]["ref"],
                       "base_ref": pr["base"]["ref"]}
 

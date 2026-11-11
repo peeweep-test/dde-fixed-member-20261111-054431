@@ -8,7 +8,7 @@
   ],
   "sha256": {
     "sources/sync-baseline.yml": "9d781328481a792b8dd610d8d2ab8fd7233063d4da24b9b23a0bf34d8c214be1",
-    "sources/verify-group-version.yml": "69035f0471437b55daf4f52f33e482b7dea47cbf76cc44633b7a1e280fadb6e8",
+    "sources/verify-group-version.yml": "bd417a5d74bbdf648c1f7c7413fb300a4e48bf6b266e5fcdfb0d193a677bd54a",
     "lab/coordinator.py": "b20355b8b7c3bea47d5d248aa68ddc0ad69cd9a3941c2de83eab19b45879ed53"
   }
 }

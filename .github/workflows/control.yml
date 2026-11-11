@@ -79,7 +79,7 @@ jobs:
         \    or pr[\"base\"][\"ref\"] != member[\"base\"] or pr[\"created_at\"] < release[\"started_at\"]):\n  \
         \      raise RuntimeError(f\"{repo} 的改版 PR 不属于 {group} 本轮 {target}，请从 DDE Release group 发起\")\n    return\
         \ f\"{group} 本轮发布 {target}，成员 PR 与发布记录一致\"\n\ndef identity(pr):\n    source = pr[\"head\"][\"repo\"] or\
-        \ {}\n    return {\"number\": pr[\"number\"], \"head\": pr[\"head\"][\"sha\"],\n            \"head_repo\"\
+        \ {}\n    return {\"number\": pr[\"number\"], \"head_sha\": pr[\"head\"][\"sha\"],\n            \"head_repo\"\
         : source.get(\"full_name\"), \"head_ref\": pr[\"head\"][\"ref\"],\n            \"base_ref\": pr[\"base\"\
         ][\"ref\"]}\n\ndef main():\n    repo = os.environ[\"GITHUB_REPOSITORY\"]\n    with open(os.environ[\"GITHUB_EVENT_PATH\"\
         ], encoding=\"utf-8\") as f:\n        event = json.load(f)\n    pr = api(f\"repos/{repo}/pulls/{event['number']}\"\
