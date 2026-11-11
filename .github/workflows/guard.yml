@@ -23,7 +23,6 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      VERIFIED_PRS_FILE: ${{ runner.temp }}/verified-prs.json
     steps:
     - uses: actions/checkout@v5
       with:
@@ -101,8 +100,8 @@ jobs:
         \ = [p for p in related\n                if p[\"state\"] == \"open\" and p[\"head\"][\"sha\"] == os.environ[\"\
         PR_HEAD_SHA\"]]\n    if not any(p[\"number\"] == pr[\"number\"] for p in open_prs) and pr[\"state\"] ==\
         \ \"open\":\n        open_prs.append(pr)\n    for item in open_prs:\n        check(repo, item)\n    Path(os.environ[\"\
-        VERIFIED_PRS_FILE\"]).write_text(\n        json.dumps(sorted((identity(pr) for pr in open_prs), key=lambda\
-        \ pr: pr[\"number\"])) + \"\\n\",\n        encoding=\"utf-8\")\n    print(f\"同提交开放 PR 校验通过: {len(open_prs)}\"\
+        RUNNER_TEMP\"], \"verified-prs.json\").write_text(\n        json.dumps(sorted((identity(pr) for pr in open_prs),\
+        \ key=lambda pr: pr[\"number\"])) + \"\\n\",\n        encoding=\"utf-8\")\n    print(f\"同提交开放 PR 校验通过: {len(open_prs)}\"\
         )\n\nif __name__ == \"__main__\":\n    main()\nPY\n"
     - name: Wait for retarget after validation
       if: github.event.action == 'opened' && github.event.pull_request.head.ref == 'lab/retarget'
@@ -117,8 +116,8 @@ jobs:
       run: "set -euo pipefail\ncurrent_state=success\nif [ \"$VERIFY_OUTCOME\" != \"success\" ]; then\n  current_state=failure\n\
         fi\nif [ \"$current_state\" = success ]; then\n  if ! gh api \"repos/$GITHUB_REPOSITORY/commits/$PR_HEAD_SHA/pulls?per_page=100\"\
         \ \\\n      > \"$RUNNER_TEMP/current-prs.json\"; then\n    echo '::error::无法刷新关联 PR，成员版本校验不能通过' >&2\n  \
-        \  current_state=failure\n  elif ! python3 - \"$VERIFIED_PRS_FILE\" \"$RUNNER_TEMP/current-prs.json\" \"\
-        $PR_HEAD_SHA\" <<'PY'\nimport json\nimport sys\n\nexpected_file, current_file, head_sha = sys.argv[1:]\n\
+        \  current_state=failure\n  elif ! python3 - \"$RUNNER_TEMP/verified-prs.json\" \"$RUNNER_TEMP/current-prs.json\"\
+        \ \"$PR_HEAD_SHA\" <<'PY'\nimport json\nimport sys\n\nexpected_file, current_file, head_sha = sys.argv[1:]\n\
         with open(expected_file, encoding=\"utf-8\") as f:\n    expected = json.load(f)\nwith open(current_file,\
         \ encoding=\"utf-8\") as f:\n    current = json.load(f)\n\ndef identity(pr):\n    source = pr[\"head\"][\"\
         repo\"] or {}\n    return {\"number\": pr[\"number\"], \"head_sha\": pr[\"head\"][\"sha\"],\n          \

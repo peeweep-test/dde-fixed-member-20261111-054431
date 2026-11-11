@@ -17,7 +17,6 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      VERIFIED_PRS_FILE: ${{ runner.temp }}/verified-prs.json
     steps:
       - name: Mark version check pending
         run: |
@@ -155,7 +154,7 @@ jobs:
                   open_prs.append(pr)
               for item in open_prs:
                   check(repo, item)
-              Path(os.environ["VERIFIED_PRS_FILE"]).write_text(
+              Path(os.environ["RUNNER_TEMP"], "verified-prs.json").write_text(
                   json.dumps(sorted((identity(pr) for pr in open_prs), key=lambda pr: pr["number"])) + "\n",
                   encoding="utf-8")
               print(f"同提交开放 PR 校验通过: {len(open_prs)}")
@@ -179,7 +178,7 @@ jobs:
                 > "$RUNNER_TEMP/current-prs.json"; then
               echo '::error::无法刷新关联 PR，成员版本校验不能通过' >&2
               current_state=failure
-            elif ! python3 - "$VERIFIED_PRS_FILE" "$RUNNER_TEMP/current-prs.json" "$PR_HEAD_SHA" <<'PY'
+            elif ! python3 - "$RUNNER_TEMP/verified-prs.json" "$RUNNER_TEMP/current-prs.json" "$PR_HEAD_SHA" <<'PY'
           import json
           import sys
 

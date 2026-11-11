@@ -89,6 +89,6 @@ jobs:
         \ = [p for p in related\n                if p[\"state\"] == \"open\" and p[\"head\"][\"sha\"] == os.environ[\"\
         PR_HEAD_SHA\"]]\n    if not any(p[\"number\"] == pr[\"number\"] for p in open_prs) and pr[\"state\"] ==\
         \ \"open\":\n        open_prs.append(pr)\n    for item in open_prs:\n        check(repo, item)\n    Path(os.environ[\"\
-        VERIFIED_PRS_FILE\"]).write_text(\n        json.dumps(sorted((identity(pr) for pr in open_prs), key=lambda\
-        \ pr: pr[\"number\"])) + \"\\n\",\n        encoding=\"utf-8\")\n    print(f\"同提交开放 PR 校验通过: {len(open_prs)}\"\
+        RUNNER_TEMP\"], \"verified-prs.json\").write_text(\n        json.dumps(sorted((identity(pr) for pr in open_prs),\
+        \ key=lambda pr: pr[\"number\"])) + \"\\n\",\n        encoding=\"utf-8\")\n    print(f\"同提交开放 PR 校验通过: {len(open_prs)}\"\
         )\n\nif __name__ == \"__main__\":\n    main()\nPY\n"
