@@ -137,7 +137,7 @@ jobs:
               source = pr["head"]["repo"] or {}
               return {"number": pr["number"], "head": pr["head"]["sha"],
                       "head_repo": source.get("full_name"), "head_ref": pr["head"]["ref"],
-                      "base_ref": pr["base"]["ref"], "base_sha": pr["base"]["sha"]}
+                      "base_ref": pr["base"]["ref"]}
 
           def main():
               repo = os.environ["GITHUB_REPOSITORY"]
@@ -192,7 +192,7 @@ jobs:
               source = pr["head"]["repo"] or {}
               return {"number": pr["number"], "head_sha": pr["head"]["sha"],
                       "head_repo": source.get("full_name"), "head_ref": pr["head"]["ref"],
-                      "base_ref": pr["base"]["ref"], "base_sha": pr["base"]["sha"]}
+                      "base_ref": pr["base"]["ref"]}
 
           current = sorted((identity(pr) for pr in current
                             if pr["state"] == "open" and pr["head"]["sha"] == head_sha),
